@@ -58,7 +58,7 @@
 ## Testing
 Run the test suite using:
 ```bash
-pytest tests/
+python -m unittest -v
 ```
 
 ## Logging

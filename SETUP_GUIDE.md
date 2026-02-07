@@ -35,30 +35,23 @@ KITE_USER_ID=your_user_id
 
 ### 4. Authenticate
 
-Run the main script to get the login URL:
+Generate your session using the official Kite Connect flow:
 
-```bash
-python main.py
-```
+1. Build a `KiteConnect` client with your API key.
+2. Open `kite.login_url()` in a browser and complete login.
+3. Exchange the returned `request_token` for an `access_token`.
+4. Pass the `access_token` into `build_kite_client(...)` from `main.py`.
 
-This will print a login URL. Open it in your browser and complete the Kite login.
+### 5. Place an Order
 
-After login, you'll be redirected with a `request_token` in the URL.
-
-### 5. Set Session Token
-
-In `main.py`, uncomment and update:
+Use the high-level helper in `main.py` or `KiteOrderManager` directly:
 
 ```python
-request_token = "your_request_token_from_redirect"
-api_secret = "your_api_secret"
-set_kite_session(kite, request_token, api_secret)
-```
+from main import build_kite_client, place_mis_order
 
-Then run again:
-
-```bash
-python main.py
+kite = build_kite_client(api_key="your_api_key", access_token="your_access_token")
+order_id, avg_price = place_mis_order(kite, symbol="INFY", quantity=1, side="BUY")
+print(order_id, avg_price)
 ```
 
 ## Usage Examples
