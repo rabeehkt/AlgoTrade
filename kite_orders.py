@@ -7,7 +7,6 @@ Part of the AlgoTrade algorithmic trading system.
 
 from kiteconnect import KiteConnect
 from typing import Dict, Tuple, Any, Optional
-from datetime import datetime
 import logging
 
 # Configure logging
