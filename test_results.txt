@@ -1,0 +1,10 @@
+test_calculate_opening_range_insufficient_time (tests.test_orb_strategy.TestOrbStrategy.test_calculate_opening_range_insufficient_time) ... ok
+test_calculate_opening_range_success (tests.test_orb_strategy.TestOrbStrategy.test_calculate_opening_range_success) ... ok
+test_check_signal_buy (tests.test_orb_strategy.TestOrbStrategy.test_check_signal_buy) ... ok
+test_check_signal_none (tests.test_orb_strategy.TestOrbStrategy.test_check_signal_none) ... ok
+test_check_signal_sell (tests.test_orb_strategy.TestOrbStrategy.test_check_signal_sell) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+OK
