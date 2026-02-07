@@ -123,3 +123,19 @@ class OrbStrategy:
             return "SELL"
             
         return None
+
+    def calculate_signal_strength(self, current_price: float, signal: str) -> float:
+        """
+        Calculate the strength of the breakout signal.
+        Strength = abs(Current Price - FLip Level) / Range
+        """
+        if not self.orb_high or not self.orb_low:
+            return 0.0
+            
+        orb_range = self.orb_high - self.orb_low
+        if orb_range == 0:
+            return 0.0 # Avoid division by zero
+            
+        level = self.orb_high if signal == "BUY" else self.orb_low
+        strength = abs(current_price - level) / orb_range
+        return strength

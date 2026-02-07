@@ -258,6 +258,11 @@ def run_backtest(target_date: str) -> Dict[str, Any]:
                      orb_range = state['orb_high'] - state['orb_low']
                      if orb_range == 0: orb_range = 0.05 # Prevent div by zero
                      level = state['orb_high'] if signal == "BUY" else state['orb_low']
+                     
+                     # Use the same logic as OrbStrategy (inlined here for backtest simplicity without full object overhead)
+                     # strength = OrbStrategy.calculate_signal_strength(..., current_price, signal) 
+                     # Refactoring backtest to use the exact class method would require instantiating OrbStrategy for each stock.
+                     # For now, we keep the logic identical:
                      strength = abs(current_price - level) / orb_range
                      
                      potential_signals.append({
@@ -270,9 +275,18 @@ def run_backtest(target_date: str) -> Dict[str, Any]:
                      })
 
         # 3. Process Signals (Ranking)
-        if potential_signals and trades_taken_today < max_trades:
+        if potential_signals:
             # Sort by strength descending
             potential_signals.sort(key=lambda x: x['strength'], reverse=True)
+            
+            # Print Candidate Summary
+            if trades_taken_today < max_trades:
+                print(f"\n--- CANDIDATES at {current_time} (Top 3 by Strength) ---")
+                for i, sig in enumerate(potential_signals[:3]):
+                    orb_h = stock_states[sig['symbol']]['orb_high']
+                    orb_l = stock_states[sig['symbol']]['orb_low']
+                    rng = orb_h - orb_l if orb_h and orb_l else 0
+                    print(f"  {i+1}. {sig['symbol']} [{sig['signal']}] | Score: {sig['strength']:.4f} | Range: {rng:.2f} | Price: {sig['price']}")
             
             # Take top N
             slots_available = max_trades - trades_taken_today
@@ -292,7 +306,7 @@ def run_backtest(target_date: str) -> Dict[str, Any]:
                 
                 trades_taken_today += 1
                 
-                print(f"[{current_time}] {symbol} ENTRY: {entry['signal']} @ {entry['price']} | Strength: {entry['strength']:.2f}")
+                print(f">>> EXECUTING TRADE: {symbol} selected. Reason: Highest Strength ({entry['strength']:.4f}) among candidates.")
                 trades.append({
                     'symbol': symbol, 'type': 'ENTRY', 'side': entry['signal'],
                     'price': entry['price'], 'time': current_time,
