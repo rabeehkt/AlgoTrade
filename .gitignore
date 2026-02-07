@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.env
+
+# IDE settings
+.vscode/
+.idea/
+
+# API credentials
+*.env
+
+# Log files
+*.log
