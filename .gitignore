@@ -16,4 +16,4 @@ venv/
 # Log files
 *.log
 
-config
+config.py
