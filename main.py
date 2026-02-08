@@ -10,6 +10,10 @@ from kiteconnect import KiteConnect
 
 from kite_orders import KiteOrderManager
 
+def normalize_tradingsymbol(symbol: str) -> str:
+    """Return tradingsymbol without exchange prefix."""
+    return symbol.split(":")[-1]
+
 
 def build_kite_client(api_key: str, access_token: str) -> KiteConnect:
     """Create an authenticated Kite client."""
@@ -137,10 +141,11 @@ def run_orb_bot():
                 
                 # Place Order
                 try:
+                    tradingsymbol = normalize_tradingsymbol(symbol)
                     order_id, avg_price = place_mis_order(
-                        kite, 
-                        symbol, 
-                        CONFIG.order_size, 
+                        kite,
+                        tradingsymbol,
+                        CONFIG.order_size,
                         best_signal['signal']
                     )
                     print(f"Order Placed: {order_id} @ {avg_price}")
