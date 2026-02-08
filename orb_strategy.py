@@ -32,6 +32,17 @@ class OrbStrategy:
         self.orb_high = None
         self.orb_low = None
         self.range_calculated = False
+        self.range_date = None
+
+
+    def _reset_range_for_new_session(self, now: datetime.datetime) -> None:
+        """Reset ORB range once trading moves to a new date."""
+        current_date = now.date()
+        if self.range_date is not None and self.range_date != current_date:
+            self.orb_high = None
+            self.orb_low = None
+            self.range_calculated = False
+            self.range_date = None
 
     def fetch_instrument_token(self) -> int:
         """
@@ -72,6 +83,7 @@ class OrbStrategy:
         
         # Use provided time or current system time
         now = current_time if current_time else datetime.datetime.now()
+        self._reset_range_for_new_session(now)
         market_start_time = now.replace(hour=9, minute=15, second=0, microsecond=0)
         
         # Ensure we are past the ORB duration
@@ -98,7 +110,8 @@ class OrbStrategy:
         self.orb_high = max(highs)
         self.orb_low = min(lows)
         self.range_calculated = True
-        
+        self.range_date = now.date()
+
         self.logger.info(f"ORB Calculated: High={self.orb_high}, Low={self.orb_low}")
         return self.orb_high, self.orb_low
 
@@ -107,8 +120,11 @@ class OrbStrategy:
         Check for breakout signals.
         Returns 'BUY', 'SELL', or None.
         """
+        now = current_time if current_time else datetime.datetime.now()
+        self._reset_range_for_new_session(now)
+
         if not self.range_calculated:
-            self.calculate_opening_range(current_time)
+            self.calculate_opening_range(now)
             
         if not self.range_calculated or self.orb_high is None or self.orb_low is None:
             return None
