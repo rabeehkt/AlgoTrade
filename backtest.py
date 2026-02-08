@@ -1,7 +1,7 @@
 import logging
 import datetime
 from typing import List, Dict, Any, Optional
-from config import CONFIG
+from config_loader import CONFIG
 from orb_strategy import OrbStrategy
 from kiteconnect import KiteConnect
 
@@ -199,7 +199,7 @@ def run_backtest(target_date: str) -> Dict[str, Any]:
             current_low = candle['low']
             
             # Manage Existing Position
-            if state['position']:
+            if state['position'] in {'BUY', 'SELL'}:
                 exit_reason = None
                 exit_price = 0
                 
@@ -231,7 +231,7 @@ def run_backtest(target_date: str) -> Dict[str, Any]:
                         'symbol': symbol, 'type': 'EXIT', 'side': state['position'], 
                         'price': exit_price, 'time': current_time, 'pnl': pnl, 'reason': exit_reason
                      })
-                     state['position'] = "EXITED" # Mark as exited so no re-entry
+                     state['position'] = None
             
             # Check New Entry (Only if no position and limit not reached)
             elif state['orb_locked'] and state['position'] is None and trades_taken_today < max_trades:

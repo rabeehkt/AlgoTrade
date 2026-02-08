@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import datetime
 from orb_strategy import OrbStrategy
-from config import CONFIG
+from config_loader import CONFIG
 
 class TestOrbStrategy(unittest.TestCase):
     def setUp(self):
@@ -58,6 +58,27 @@ class TestOrbStrategy(unittest.TestCase):
         signal = self.strategy.check_signal(89)
         self.assertEqual(signal, "SELL")
         
+
+    def test_check_signal_recalculates_for_new_date(self):
+        self.strategy.range_calculated = True
+        self.strategy.orb_high = 100
+        self.strategy.orb_low = 90
+        self.strategy.range_date = datetime.date(2024, 1, 1)
+
+        def fake_calculate(now):
+            self.strategy.orb_high = 110
+            self.strategy.orb_low = 95
+            self.strategy.range_calculated = True
+            self.strategy.range_date = now.date()
+            return 110, 95
+
+        self.strategy.calculate_opening_range = MagicMock(side_effect=fake_calculate)
+
+        signal = self.strategy.check_signal(111, datetime.datetime(2024, 1, 2, 9, 35))
+
+        self.strategy.calculate_opening_range.assert_called_once()
+        self.assertEqual(signal, "BUY")
+
     def test_check_signal_none(self):
         self.strategy.range_calculated = True
         self.strategy.orb_high = 100
