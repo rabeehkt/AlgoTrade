@@ -45,7 +45,7 @@ def calculate_pnl(entry_price: float, exit_price: float, quantity: int) -> float
     return (exit_price - entry_price) * quantity
 
 
-from config import CONFIG
+from config_loader import CONFIG
 from orb_strategy import OrbStrategy
 import time
 import datetime

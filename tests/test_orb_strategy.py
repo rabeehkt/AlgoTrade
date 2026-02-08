@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import datetime
 from orb_strategy import OrbStrategy
-from config import CONFIG
+from config_loader import CONFIG
 
 class TestOrbStrategy(unittest.TestCase):
     def setUp(self):

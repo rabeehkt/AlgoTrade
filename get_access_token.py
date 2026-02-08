@@ -1,5 +1,5 @@
 from kiteconnect import KiteConnect
-from config import CONFIG
+from config_loader import CONFIG
 import webbrowser
 
 def get_access_token():

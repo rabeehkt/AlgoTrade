@@ -1,7 +1,7 @@
 import logging
 import datetime
 from typing import List, Dict, Any, Optional
-from config import CONFIG
+from config_loader import CONFIG
 from orb_strategy import OrbStrategy
 from kiteconnect import KiteConnect
 

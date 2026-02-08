@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Dict, Any, Tuple
 import datetime
 import logging
-from config import CONFIG
+from config_loader import CONFIG
 
 class OrbStrategy:
     """
